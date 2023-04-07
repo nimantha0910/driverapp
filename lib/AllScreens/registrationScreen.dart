@@ -1,5 +1,6 @@
 import "dart:convert";
 import "package:driverapp/AllWidgets/progressDialog.dart";
+import "package:driverapp/configMaps.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:firebase_database/ui/firebase_sorted_list.dart";
 import "package:flutter/material.dart";
@@ -215,7 +216,9 @@ class registrationScreen extends StatelessWidget {
           "phone": phoneTextEditingController.text.trim(),
         };
 
-        userRef.child(firebaseUser.uid).set(userDataMap);
+        driversRef.child(firebaseUser.uid).set(userDataMap);
+        currentfirebaseUser = firebaseUser;
+
         displayToastMessage(
             "Congratulations, your account has been created", context);
       } else {

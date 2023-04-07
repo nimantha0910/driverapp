@@ -15,6 +15,7 @@ void main() async {
 }
 
 DatabaseReference userRef = FirebaseDatabase.instance.ref().child("users");
+DatabaseReference driversRef = FirebaseDatabase.instance.ref().child("driver");
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your a1pplication.
@@ -30,9 +31,7 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.blue,
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
-          initialRoute: FirebaseAuth.instance.currentUser == null
-              ? loginScreen.idScreen
-              : MainScreen.idScreen,
+          initialRoute: MainScreen.idScreen,
           routes: {
             registrationScreen.idScreen: (context) => registrationScreen(),
             loginScreen.idScreen: (context) => loginScreen(),
