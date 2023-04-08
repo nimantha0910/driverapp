@@ -1,8 +1,15 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:developer';
 
+import 'package:driverapp/configMaps.dart';
+import 'package:driverapp/main.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart' as http;
 
 class HomeTabPage extends StatefulWidget {
   static final CameraPosition _kGooglePlex = CameraPosition(
@@ -69,7 +76,82 @@ class _HomeTabPageState extends State<HomeTabPage> {
             locatePosition();
           },
         ),
+
+        //online offline driver container
+        Container(
+          height: 140.0,
+          width: double.infinity,
+          color: Colors.black54,
+        ),
+
+        Positioned(
+          top: 60.0,
+          left: 0.0,
+          right: 0.0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.black, // background
+                    onPrimary: Colors.white, // foreground
+                  ),
+                  onPressed: () {
+                    makeDriverOnlineNow();
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.all(17.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Offline Now - Go Online ",
+                          style: TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
+                        Icon(
+                          Icons.phone_android,
+                          color: Colors.white,
+                          size: 26.0,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ],
     );
+  }
+
+  void makeDriverOnlineNow() async {
+    try {
+      FirebaseAuth auth = FirebaseAuth.instance;
+      log(auth.currentUser!.uid);
+      const url =
+          'https://rider-app-29f66-default-rtdb.firebaseio.com/availableDrivers.json';
+      var data = {
+        "uid": auth.currentUser!.uid,
+        "longitude": currentPosition.longitude,
+        "latitude": currentPosition.latitude
+      };
+      await http.post(Uri.parse(url), body: json.encode(data));
+      Geofire.initialize("availableDrivers");
+      log(auth.currentUser!.uid +
+          currentPosition.longitude.toString() +
+          currentPosition.latitude.toString());
+      Geofire.setLocation(auth.currentUser!.uid, currentPosition.latitude,
+          currentPosition.longitude);
+
+      rideRequestRef.onValue.listen((event) {});
+    } catch (e) {
+      log(e.toString());
+    }
   }
 }

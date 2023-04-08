@@ -1,3 +1,4 @@
+import 'package:driverapp/configMaps.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -16,6 +17,11 @@ void main() async {
 
 DatabaseReference userRef = FirebaseDatabase.instance.ref().child("users");
 DatabaseReference driversRef = FirebaseDatabase.instance.ref().child("driver");
+DatabaseReference rideRequestRef = FirebaseDatabase.instance
+    .ref()
+    .child("driver")
+    .child(currentfirebaseUser!.uid)
+    .child("newRide");
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your a1pplication.
@@ -31,7 +37,9 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.blue,
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
-          initialRoute: MainScreen.idScreen,
+          initialRoute: FirebaseAuth.instance.currentUser == null
+              ? loginScreen.idScreen
+              : MainScreen.idScreen,
           routes: {
             registrationScreen.idScreen: (context) => registrationScreen(),
             loginScreen.idScreen: (context) => loginScreen(),
