@@ -12,6 +12,8 @@ import 'AllScreens/mainscreen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  currentfirebaseUser = FirebaseAuth.instance.currentUser;
   runApp(MyApp());
 }
 
@@ -39,7 +41,7 @@ class MyApp extends StatelessWidget {
           ),
           initialRoute: FirebaseAuth.instance.currentUser == null
               ? loginScreen.idScreen
-              : MainScreen.idScreen,
+              : loginScreen.idScreen,
           routes: {
             registrationScreen.idScreen: (context) => registrationScreen(),
             loginScreen.idScreen: (context) => loginScreen(),

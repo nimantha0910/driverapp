@@ -1,3 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
+
+import "dart:convert";
 import "dart:developer";
 import "package:firebase_database/firebase_database.dart";
 import "package:flutter/material.dart";
@@ -6,6 +9,7 @@ import "package:driverapp/AllScreens/registrationScreen.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:driverapp/AllWidgets/progressDialog.dart";
 import "../main.dart";
+import 'package:http/http.dart' as http;
 
 class loginScreen extends StatelessWidget {
   //const loginScreen({super.key});
@@ -135,28 +139,36 @@ class loginScreen extends StatelessWidget {
         });
 
     try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailTextEditingController.text,
-        password: passwordTextEditingController.text,
-      );
-
-      User? firebaseUser = userCredential.user;
-      log(firebaseUser!.uid);
-
-      if (firebaseUser != null) {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: ((context) => MainScreen()),
-          ),
-        );
-      } else {
-        Navigator.pop(context);
-        _firebaseAuth.signOut();
-        displayToastMessage(
-            "No records exits for this user. Please create a new account.",
-            context);
+      late http.Response response;
+      var drivers = [];
+      const url =
+          'https://rider-app-29f66-default-rtdb.firebaseio.com/driver.json';
+      response = await http.get(Uri.parse(url));
+      Map body = json.decode(response.body);
+      body.forEach((key, value) {
+        drivers.add(value);
+      });
+      log(drivers.toString());
+      for (var item in drivers) {
+        if (emailTextEditingController.text.trim() == item['email']) {
+          UserCredential userCredential =
+              await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: emailTextEditingController.text,
+            password: passwordTextEditingController.text,
+          );
+          log('message');
+          Navigator.pop(context);
+          await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: ((context) => MainScreen()),
+            ),
+          );
+        }
       }
+      Navigator.pop(context);
+      displayToastMessage(
+          "No records exits for this user. Please create a new account.",
+          context);
     } catch (e) {
       Navigator.pop(context);
       displayToastMessage("Invalid Credential.", context);
