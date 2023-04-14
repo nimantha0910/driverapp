@@ -19,7 +19,7 @@ class _MainScreenState extends State<MainScreen>
   @override
   void initState() {
     super.initState();
-    tabController = TabController(length: 4, vsync: this);
+    tabController = TabController(length: 2, vsync: this);
   }
 
   void onItemClicked(int index) {
@@ -42,17 +42,17 @@ class _MainScreenState extends State<MainScreen>
         controller: tabController,
         children: [
           HomeTabPage(),
-          EarningTabPage(),
-          RatingTabPage(),
+          // EarningTabPage(),
+          // RatingTabPage(),
           ProfileTabPage(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.credit_card), label: "Earnings"),
-          BottomNavigationBarItem(icon: Icon(Icons.star), label: "Ratings"),
+          // BottomNavigationBarItem(
+          //     icon: Icon(Icons.credit_card), label: "Earnings"),
+          // BottomNavigationBarItem(icon: Icon(Icons.star), label: "Ratings"),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Account"),
         ],
         unselectedItemColor: Colors.black54,

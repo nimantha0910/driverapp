@@ -1,4 +1,5 @@
 import 'package:driverapp/configMaps.dart';
+import 'package:driverapp/tabPages/driver_notification.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -12,7 +13,6 @@ import 'AllScreens/mainscreen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
   currentfirebaseUser = FirebaseAuth.instance.currentUser;
   runApp(MyApp());
 }
@@ -32,21 +32,22 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => AppData(),
       child: MaterialApp(
-          title: ' Carpark Owner App ',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            fontFamily: " Signatra ",
-            primarySwatch: Colors.blue,
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-          ),
-          initialRoute: FirebaseAuth.instance.currentUser == null
-              ? loginScreen.idScreen
-              : loginScreen.idScreen,
-          routes: {
-            registrationScreen.idScreen: (context) => registrationScreen(),
-            loginScreen.idScreen: (context) => loginScreen(),
-            MainScreen.idScreen: (context) => MainScreen(),
-          }),
+        title: ' Carpark Owner App ',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          fontFamily: " Signatra ",
+          primarySwatch: Colors.blue,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        initialRoute: FirebaseAuth.instance.currentUser == null
+            ? loginScreen.idScreen
+            : loginScreen.idScreen,
+        routes: {
+          registrationScreen.idScreen: (context) => registrationScreen(),
+          loginScreen.idScreen: (context) => loginScreen(),
+          MainScreen.idScreen: (context) => MainScreen(),
+        },
+      ),
     );
   }
 }

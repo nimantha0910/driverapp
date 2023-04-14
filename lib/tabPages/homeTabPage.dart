@@ -4,8 +4,10 @@ import 'dart:developer';
 //import 'dart:html';
 
 import 'package:driverapp/AllScreens/registrationScreen.dart';
+import 'package:driverapp/Notifications/pushNotificationService.dart';
 import 'package:driverapp/configMaps.dart';
 import 'package:driverapp/main.dart';
+import 'package:driverapp/tabPages/driver_notification.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +42,11 @@ class _HomeTabPageState extends State<HomeTabPage> {
   Color driverStatusColor = Colors.black;
   bool isDriverAvailable = false;
 
+  void initState() {
+    super.initState();
+    getCurrentDriverInfo();
+  }
+
   void locatePosition() async {
     //log('satarted calling the function');
     try {
@@ -61,6 +68,14 @@ class _HomeTabPageState extends State<HomeTabPage> {
     } catch (e) {
       return Future.error(e);
     }
+  }
+
+  void getCurrentDriverInfo() async {
+    currentfirebaseUser = await FirebaseAuth.instance.currentUser;
+    PushNotificationService pushNotificationService = PushNotificationService();
+
+    pushNotificationService.initialize();
+    pushNotificationService.getToken();
   }
 
   @override
@@ -151,6 +166,45 @@ class _HomeTabPageState extends State<HomeTabPage> {
                   ),
                 ),
               ),
+              //notification icon implementation
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const MyNotification()),
+                  );
+                },
+                child: Stack(
+                  children: [
+                    const Icon(
+                      Icons.notifications,
+                      color: Colors.white,
+                      size: 40,
+                    ),
+                    Positioned(
+                      left: 20,
+                      child: Container(
+                        width: 20,
+                        height: 20,
+                        decoration: const BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Center(
+                          child: Text(
+                            '1',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              )
             ],
           ),
         ),
