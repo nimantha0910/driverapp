@@ -72,7 +72,7 @@ class _MyNotificationState extends State<MyNotification> {
                                               height: 20.0,
                                             ),
                                             const Text(
-                                              "New Rider Request!",
+                                              "New Driver Request!",
                                               style: TextStyle(
                                                   fontSize: 18,
                                                   fontWeight: FontWeight.bold),
