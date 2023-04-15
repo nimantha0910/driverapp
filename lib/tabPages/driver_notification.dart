@@ -181,7 +181,7 @@ class _MyNotificationState extends State<MyNotification> {
                                                         .child("Ride Request")
                                                         .child(driverKey)
                                                         .update({
-                                                      "driver_id": 'accepting',
+                                                      "driver_id": 'accepted',
                                                     });
                                                     Navigator.of(context).pop();
                                                   },
